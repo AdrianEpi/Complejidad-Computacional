@@ -17,11 +17,11 @@
 * @Author: Adrian Epifanio
 * @Date:   2020-10-12 09:00:34
 * @Last Modified by:   Adrian Epifanio
-* @Last Modified time: 2020-10-12 16:44:50
+* @Last Modified time: 2020-10-12 21:12:52
 */
 /*------------------  FUNCTIONS  -----------------*/
 
-#include "../include/alphabet.hpp"
+#include "../include/state.hpp"
 
 /*------------------------------------------------*/
 
@@ -29,7 +29,9 @@
 /**
  * @brief      Constructs a new instance.
  */
-State::State (void) {	
+State::State (void) {
+	set_StateID("");
+	set_TransitionsNumber(0);	
 }
 
 /**
@@ -38,7 +40,7 @@ State::State (void) {
  * @param[in]  newState  The new state
  */
 State::State (const State& newState) {
-	set_SateID(newState.get_SateID());
+	set_StateID(newState.get_StateID());
 	set_TransitionsNumber(newState.get_TransitionsNumber());
 	set_Transitions(newState.get_Transitions());
 }
@@ -50,11 +52,11 @@ State::~State (void) {
 }
 
 /**
- * @brief      Gets the sate id.
+ * @brief      Gets the state id.
  *
- * @return     The sate id.
+ * @return     The state id.
  */
-std::string State::get_SateID (void) const {
+std::string State::get_StateID (void) const {
 	return id_;
 }
 
@@ -77,11 +79,11 @@ std::set<Transition> State::get_Transitions (void) const {
 }
 
 /**
- * @brief      Sets the sate id.
+ * @brief      Sets the state id.
  *
  * @param[in]  id    The new value
  */
-void State::set_SateID (std::string id) {
+void State::set_StateID (std::string id) {
 	id_ = id;
 }
 
@@ -111,7 +113,7 @@ void State::set_Transitions (std::set<Transition> transitions) {
  * @return     The result of the assignment
  */
 State& State::operator= (const State& newState) {
-	set_SateID(newState.get_SateID());
+	set_StateID(newState.get_StateID());
 	set_TransitionsNumber(newState.get_TransitionsNumber());
 	set_Transitions(newState.get_Transitions());
 	return *this;
@@ -157,7 +159,7 @@ bool State::operator== (const State& auxState) const {
  * @return     The result of the less-than comparison
  */
 bool State::operator< (const State& auxState) const {
-	if (get_StateID() < auxState.get_SateID()) {
+	if (get_StateID() < auxState.get_StateID()) {
 		return true;
 	}
 	else {
@@ -171,7 +173,7 @@ bool State::operator< (const State& auxState) const {
  * @param[in]  newTransition  The new transition
  */
 void State::addTransition (const Transition& newTransition) {
-	if (transitions_.find() == transitions_.end()) {
+	if (transitions_.find(newTransition) == transitions_.end()) {
 		transitionsNumber_++;
 		transitions_.insert(newTransition);
 	}
@@ -191,7 +193,7 @@ std::ostream& State::printState (std::ostream& os) const {
 	std::set<Transition>::iterator it = transitions_.begin();
 	for (; it != transitions_.end(); it++) {
 		os << " ";
-		it -> printTransition();
+		it -> printTransition(os);
 	}
 	os << " }" << std::endl;
 }

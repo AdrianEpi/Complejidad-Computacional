@@ -1,7 +1,7 @@
 # Variables
 TIME =$(LOGPATH)$(shell date)
 # Variable objetos
-OBJECTS = main.o alphabet.o stack.o
+OBJECTS = main.o alphabet.o stack.o transition.o state.o
 # Flags de compilacion
 CFLAGS = -c -std=c++17
 
@@ -18,6 +18,12 @@ alphabet.o: ../src/alphabet.cpp ../include/alphabet.hpp
 
 stack.o: ../src/stack.cpp ../include/stack.hpp
 	g++ $(CFLAGS) ../src/stack.cpp
+
+transition.o: ../src/transition.cpp ../include/transition.hpp
+	g++ $(CFLAGS) ../src/transition.cpp
+
+state.o: ../src/state.cpp ../include/state.hpp
+	g++ $(CFLAGS) ../src/state.cpp
 
 
 .PHONY: clean

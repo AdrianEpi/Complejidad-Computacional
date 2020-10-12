@@ -33,7 +33,7 @@ class State {
 
     private:
         // Attributes   
-        std::string id_;                       // The identifier of the state 0, 1, 2, 3...
+        std::string id_;                    // The identifier of the state 0, 1, 2, 3...
         unsigned transitionsNumber_;        // The ammount of transitions for the state
         std::set<Transition> transitions_;  // The set of transitions of the state
 
@@ -44,11 +44,11 @@ class State {
         ~State (void);
 
         // Getters & Setters
-        std::string get_SateID (void) const;
+        std::string get_StateID (void) const;
         unsigned get_TransitionsNumber (void) const;
         std::set<Transition> get_Transitions (void) const;
 
-        void set_SateID (std::string id);
+        void set_StateID (std::string id);
         void set_TransitionsNumber (unsigned transitionsNumber);
         void set_Transitions (std::set<Transition> transitions);
 

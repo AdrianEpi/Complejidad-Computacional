@@ -17,7 +17,7 @@
 * @Author: Adrian Epifanio
 * @Date:   2020-10-11 21:44:49
 * @Last Modified by:   Adrian Epifanio
-* @Last Modified time: 2020-10-12 16:03:42
+* @Last Modified time: 2020-10-12 20:38:05
 */
 /*------------------  FUNCTIONS  -----------------*/
 
@@ -99,7 +99,7 @@ int Alphabet::getSize (void) const {
 std::ostream& Alphabet::printAlphabet (std::ostream& os) const {
 	int aux;    // Auxiliar counter for move by the set
 	std::set<std::string>::iterator it = alphabet_.begin();
-	os << "{";
+	os << "Alphabet: {";
 	for (; it != alphabet_.end(); it++) {   // Special "for" of c++11
 		os << *it;
 		aux++;
