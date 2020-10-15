@@ -17,24 +17,23 @@
 * @Author: Adrian Epifanio
 * @Date:   2020-10-11 21:44:58
 * @Last Modified by:   Adrian Epifanio
-* @Last Modified time: 2020-10-12 21:12:02
+* @Last Modified time: 2020-10-15 21:46:10
 */
 /*------------------  FUNCTIONS  -----------------*/
 
-#include "../include/alphabet.hpp"
-#include "../include/stack.hpp"
-#include "../include/transition.hpp"
-#include "../include/state.hpp"
+#include "../include/APv.hpp"
 
 /*------------------------------------------------*/
 
 int main (void) {
-    State n;
+    /*State n;
     Alphabet a;
     Stack s;
     Transition t;
     a.printAlphabet(std::cout);
     s.printStack(std::cout);
     t.printTransition(std::cout);
-    n.printState(std::cout);
+    n.printState(std::cout);*/
+    APv asd;
+    asd.readData("../inputs/APv.txt");
 }

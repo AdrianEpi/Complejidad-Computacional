@@ -17,7 +17,7 @@
 * @Author: Adrian Epifanio
 * @Date:   2020-10-12 20:18:21
 * @Last Modified by:   Adrian Epifanio
-* @Last Modified time: 2020-10-12 20:40:45
+* @Last Modified time: 2020-10-15 08:41:52
 */
 /*------------------  FUNCTIONS  -----------------*/
 
@@ -25,54 +25,131 @@
 
 /*------------------------------------------------*/
 
+/**
+ * @brief      Constructs a new instance.
+ */
 Transition::Transition (void) {
 	set_ChainSymbol(' ');
 	set_TopStackSymbol(' ');
 	set_NextState(" ");
 }
 
+/**
+ * @brief      Constructs a new instance.
+ *
+ * @param[in]  auxTransition  The auxiliary transition
+ */
 Transition::Transition (const Transition& auxTransition) {
 	set_ChainSymbol(auxTransition.get_ChainSymbol());
 	set_TopStackSymbol(auxTransition.get_TopStackSymbol());
 	set_InsertStackSymbol(auxTransition.get_InsertStackSymbol());
+	set_CurrentState(auxTransition.get_CurrentState());
 	set_NextState(auxTransition.get_NextState());
 }
 
+/**
+ * @brief      Destroys the object.
+ */
 Transition::~Transition (void) {
 }
 
+/**
+ * @brief      Gets the chain symbol.
+ *
+ * @return     The chain symbol.
+ */
 char Transition::get_ChainSymbol (void) const {
 	return chainSymbol_;
 }
 
+/**
+ * @brief      Gets the top stack symbol.
+ *
+ * @return     The top stack symbol.
+ */
 char Transition::get_TopStackSymbol (void) const {
 	return topStackSymbol_;
 }
 
+/**
+ * @brief      Gets the insert stack symbol.
+ *
+ * @return     The insert stack symbol.
+ */
 std::vector<char> Transition::get_InsertStackSymbol (void) const {
 	return insertStackSymbol_;
 }
 
+/**
+ * @brief      Gets the current state.
+ *
+ * @return     The current state.
+ */
+std::string Transition::get_CurrentState (void) const {
+	return currentState_;
+}
+
+/**
+ * @brief      Gets the next state.
+ *
+ * @return     The next state.
+ */
 std::string Transition::get_NextState (void) const {
 	return nextState_;
 }
 
+/**
+ * @brief      Sets the chain symbol.
+ *
+ * @param[in]  newChainSymbol  The new chain symbol
+ */
 void Transition::set_ChainSymbol (char newChainSymbol) {
 	chainSymbol_ = newChainSymbol;
 }
 
+/**
+ * @brief      Sets the top stack symbol.
+ *
+ * @param[in]  newTopStackSymbol  The new top stack symbol
+ */
 void Transition::set_TopStackSymbol (char newTopStackSymbol) {
 	topStackSymbol_ = newTopStackSymbol;
 }
 
+/**
+ * @brief      Sets the insert stack symbol.
+ *
+ * @param[in]  newInsertStackSymbol  The new insert stack symbol
+ */
 void Transition::set_InsertStackSymbol (std::vector<char> newInsertStackSymbol) {
 	insertStackSymbol_ = newInsertStackSymbol;
 }
 
+/**
+ * @brief      Sets the current state.
+ *
+ * @param[in]  newCurrentState  The new current state
+ */
+void Transition::set_CurrentState (std::string newCurrentState) {
+	currentState_ = newCurrentState;
+}
+
+/**
+ * @brief      Sets the next state.
+ *
+ * @param[in]  newNextState  The new next state
+ */
 void Transition::set_NextState (std::string newNextState) {
 	nextState_ = newNextState;
 }
 
+/**
+ * @brief      Assignment operator.
+ *
+ * @param[in]  newTransition  The new transition
+ *
+ * @return     The result of the assignment
+ */
 Transition Transition::operator= (const Transition& newTransition) {
 	set_ChainSymbol(newTransition.get_ChainSymbol());
 	set_TopStackSymbol(newTransition.get_TopStackSymbol());
@@ -80,20 +157,41 @@ Transition Transition::operator= (const Transition& newTransition) {
 	set_NextState(newTransition.get_NextState());
 }
 
+/**
+ * @brief      Equality operator.
+ *
+ * @param[in]  auxTransition  The auxiliary transition
+ *
+ * @return     The result of the equality
+ */
 bool Transition::operator== (const Transition& auxTransition) const {
-	if ((get_ChainSymbol() == auxTransition.get_ChainSymbol()) && (get_TopStackSymbol() == auxTransition.get_TopStackSymbol()) && (get_InsertStackSymbol() == auxTransition.get_InsertStackSymbol()) && (get_NextState() == auxTransition.get_NextState())) {
+	if ((get_ChainSymbol() == auxTransition.get_ChainSymbol()) && (get_TopStackSymbol() == auxTransition.get_TopStackSymbol()) && (get_InsertStackSymbol() == auxTransition.get_InsertStackSymbol()) && (get_NextState() == auxTransition.get_NextState()) || (get_CurrentState() == auxTransition.get_CurrentState())) {
 		return true;
 	}
 	return false;
 }
 
+/**
+ * @brief      Inequality operator.
+ *
+ * @param[in]  auxTransition  The auxiliary transition
+ *
+ * @return     The result of the inequality
+ */
 bool Transition::operator!= (const Transition& auxTransition) const {
-	if ((get_ChainSymbol() != auxTransition.get_ChainSymbol()) || (get_TopStackSymbol() != auxTransition.get_TopStackSymbol()) || (get_InsertStackSymbol() != auxTransition.get_InsertStackSymbol()) || (get_NextState() != auxTransition.get_NextState())) {
+	if ((get_ChainSymbol() != auxTransition.get_ChainSymbol()) || (get_TopStackSymbol() != auxTransition.get_TopStackSymbol()) || (get_InsertStackSymbol() != auxTransition.get_InsertStackSymbol()) || (get_NextState() != auxTransition.get_NextState()) || (get_CurrentState() != auxTransition.get_CurrentState())) {
 		return true;
 	}
 	return false;
 }
 
+/**
+ * @brief      Less-than comparison operator.
+ *
+ * @param[in]  auxTransition  The auxiliary transition
+ *
+ * @return     The result of the less-than comparison
+ */
 bool Transition::operator< (const Transition& auxTransition) const {
 	if (get_ChainSymbol() <= auxTransition.get_ChainSymbol()) {
 		return true;
@@ -101,6 +199,13 @@ bool Transition::operator< (const Transition& auxTransition) const {
 	return false;
 }
 
+/**
+ * @brief      Prints a transition.
+ *
+ * @param      os    The output stream
+ *
+ * @return     The output stream
+ */
 std::ostream& Transition::printTransition (std::ostream& os) const {
 	os << "Transition: (" << get_ChainSymbol() << ", " << get_NextState() << ", " << get_ChainSymbol() << ", ";
 	for (int i = 0; i < insertStackSymbol_.size(); i++) {
