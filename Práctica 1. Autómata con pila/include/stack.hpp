@@ -34,7 +34,7 @@ class Stack {
 
     private:
         // Attributes
-        std::stack<char> stack_; // The stack where the elements will be stored
+        std::stack<std::string> stack_; // The stack where the elements will be stored
         unsigned size_;                 // The stack's size
         Alphabet alphabet_;             // The alphabet recognized by the stack
 
@@ -44,19 +44,19 @@ class Stack {
         ~Stack (void);
 
         // Getters & Setters
-        std::stack<char> get_Stack (void) const;
+        std::stack<std::string> get_Stack (void) const;
         unsigned get_StackSize (void) const;
         Alphabet get_StackAlphabet (void) const;
 
-        void set_Stack (std::stack<char> newStack);
+        void set_Stack (std::stack<std::string> newStack);
         void set_StackSize (unsigned size);
         void set_StackAlphabet (Alphabet newAlphabet);
 
         // Functions
         bool isEmpty (void);
-        char top (void);
+        std::string top (void);
         void pop (void);
-        void push (char element);
+        void push (std::string element);
 
         // Write
         std::ostream& printStack (std::ostream& os);

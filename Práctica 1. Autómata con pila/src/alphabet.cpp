@@ -17,7 +17,7 @@
 * @Author: Adrian Epifanio
 * @Date:   2020-10-11 21:44:49
 * @Last Modified by:   Adrian Epifanio
-* @Last Modified time: 2020-10-12 20:38:05
+* @Last Modified time: 2020-10-16 08:19:29
 */
 /*------------------  FUNCTIONS  -----------------*/
 
@@ -90,6 +90,22 @@ int Alphabet::getSize (void) const {
 }
 
 /**
+ * @brief      Finds if an element is in the alphabet or not.
+ *
+ * @param[in]  element  The element
+ *
+ * @return     True if the specified element is in alphabet, False otherwise.
+ */
+bool Alphabet::isInAlphabet (std::string element) {
+	for (std::string tmp : get_Alphabet()) {
+		if (tmp == element) {
+			return true;
+		}
+	}
+	return false;
+}
+
+/**
  * @brief      Prints an alphabet.
  *
  * @param      os    The output stream
@@ -97,7 +113,7 @@ int Alphabet::getSize (void) const {
  * @return     The output stream
  */
 std::ostream& Alphabet::printAlphabet (std::ostream& os) const {
-	int aux;    // Auxiliar counter for move by the set
+	int aux = 0;    // Auxiliar counter for move by the set
 	std::set<std::string>::iterator it = alphabet_.begin();
 	os << "Alphabet: {";
 	for (; it != alphabet_.end(); it++) {   // Special "for" of c++11

@@ -66,16 +66,15 @@ class APv {
         void set_Path (std::vector<Transition> newPath);
 
         // Functions
-        void generateStates (std::string statesLine);
-        void generateAlphabet (std::string statesLine);
-        void generateStackAlphabet (std::string statesLine);
+        void dataSaver (std::string textLine, int mode); // Modes: 0 -> state, 1 -> automaton alphabet, 2 -> stack alphabet
         void addState (State newState);
-        std::vector<Transition> getNextTransitions (State aux, char chainSymbol, char stackSymbol);
+        std::vector<Transition> getNextTransitions (State aux, std::string chainSymbol, std::string stackSymbol);
         int findState (std::string id);
-        bool isValidState (std::string id);
+        bool isValidData (std::string element, int mode); // Modes: 0 -> state, 1 -> automaton alphabet, 2 -> stack alphabet
         void tryChain (std::string chain);
         bool isChainAccepted (std::string chain, std::string stateID);
         std::string eraseSpaces (std::string str);
+        void generateTransition (std::string str);
 
         // Read & Write
         void readData (std::string inputFile);

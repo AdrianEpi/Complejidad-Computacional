@@ -17,7 +17,7 @@
 * @Author: Adrian Epifanio
 * @Date:   2020-10-15 10:00:41
 * @Last Modified by:   Adrian Epifanio
-* @Last Modified time: 2020-10-15 22:59:58
+* @Last Modified time: 2020-10-16 09:02:45
 */
 /*------------------  FUNCTIONS  -----------------*/
 
@@ -176,67 +176,47 @@ void APv::set_Path (std::vector<Transition> newPath) {
 }
 
 /**
- * @brief      Creates the states by reading the names from file
+ * @brief      Creates the states, alphabet or stack alphabet depending on mode
  *
- * @param[in]  statesLine  The states line
+ * @param[in]  textLine  The text line
+ * @param[in]  mode      The mode
  */
-void APv::generateStates (std::string statesLine) {
+void APv::dataSaver (std::string textLine, int mode) {
 	int counter = 0;
-	std::string stateName;
-	while (counter <= statesLine.length()) {
-		if (statesLine[counter] != ' ' && statesLine[counter] != '\n' && statesLine[counter] != '\0') {
-			stateName += statesLine[counter];
-		}
-		else {
-			State newState;
-			newState.set_StateID(stateName);
-			addState(newState);
-			stateName = "";
-		}
-		counter++;
-	}
-}
-
-/**
- * @brief      Creates the alphabet allowed by the automaton from the file
- *
- * @param[in]  alphabetLine  The alphabet line
- */
-void APv::generateAlphabet (std::string alphabetLine) {
-	int counter = 0;
-	std::string element;
-	while (counter <= alphabetLine.length()) {
-		if (alphabetLine[counter] != ' ' && alphabetLine[counter] != '\n' && alphabetLine[counter] != '\0') {
-			element += alphabetLine[counter];
-		}
-		else {
-			alphabet_.addElement(element);
-			element = "";
-		}
-		counter++;
-	}
-}
-
-/**
- * @brief      Creates the stack alphabet allowed by the automaton from the file
- *
- * @param[in]  alphabetLine  The alphabet line
- */
-void APv::generateStackAlphabet (std::string alphabetLine) {
-	int counter = 0;
-	std::string element;
+	std::string aux;
 	Alphabet tmp;
-	while (counter <= alphabetLine.length()) {
-		if (alphabetLine[counter] != ' ' && alphabetLine[counter] != '\n' && alphabetLine[counter] != '\0') {
-			element += alphabetLine[counter];
+	State newState;
+	while (counter <= textLine.length()) {
+		if (textLine[counter] != ' ' && textLine[counter] != '\n' && textLine[counter] != '\0') {
+			aux += textLine[counter];
 		}
 		else {
-			tmp.addElement(element);
-			element = "";
+			switch (mode) {
+				case 0: // Case States
+					newState.set_StateID(aux);
+					addState(newState);
+					break;
+
+				case 1:	// Case automaton Alphabet
+					alphabet_.addElement(aux);
+					break;
+
+				case 2:	// Case stack Alphabet
+					tmp.addElement(aux);
+					break;
+
+				default:
+					std::cout << "Error, mode not avalaible";
+					exit(1);
+					break;
+			}	
+			aux = "";
 		}
 		counter++;
 	}
-	stack_.set_StackAlphabet(tmp);
+	if (mode == 2) {
+		stack_.set_StackAlphabet(tmp);
+	}
 }
 
 /**
@@ -257,7 +237,7 @@ void APv::addState (State newState) {
  *
  * @return     The next transitions.
  */
-std::vector<Transition> APv::getNextTransitions (State aux, char chainSymbol, char stackSymbol) {
+std::vector<Transition> APv::getNextTransitions (State aux, std::string chainSymbol, std::string stackSymbol) {
 	std::vector<Transition> possibleTransitions;
 	for (Transition trans : aux.get_Transitions()) {
 		if ((trans.get_ChainSymbol() == chainSymbol) && (trans.get_TopStackSymbol() == stackSymbol)) {
@@ -267,24 +247,42 @@ std::vector<Transition> APv::getNextTransitions (State aux, char chainSymbol, ch
 	return possibleTransitions;
 }
 
+
 /**
- * @brief      Determines whether the specified identifier is valid state.
+ * @brief      Determines if the given data is a valid data.
  *
- * @param[in]  id    The identifier
+ * @param[in]  data  The data
+ * @param[in]  mode  The mode
  *
- * @return     True if the specified identifier is valid state, False otherwise.
+ * @return     True if valid data, False otherwise.
  */
-bool APv::isValidState (std::string id) {
-	std::string name = "";
-	for (int i = 0; i <= id.length(); i++) {
-		if (id[i] != ' ' && id[i] != '\n' && id[i] != '\0') {
-			name += id[i];
-		}
+bool APv::isValidData (std::string data, int mode) {
+	switch (mode) {
+		case 0:
+			if (findState(data) != -1) {
+				return true;
+			}
+			return false;
+			break;
+
+		case 1:
+			if (get_Alphabet().isInAlphabet(data) || data == ".") {
+				return true;
+			}
+			return false;
+			break;
+
+		case 2:
+			if (get_Stack().get_StackAlphabet().isInAlphabet(data) || data == ".") {
+				return true;
+			}
+			return false;
+			break;
+
+		default:
+			std::cout << std::endl << "Error, not mode avalaible";
+			break;
 	}
-	if (findState(name) != -1) {
-		return true;
-	}
-	return false;
 }
 
 /**
@@ -328,6 +326,91 @@ std::string APv::eraseSpaces (std::string str) {
 	return tmp;
 }
 
+/**
+ * @brief      Generates and inserts a transition on the right state
+ *
+ * @param[in]  str   The string with the transition data
+ */
+void APv::generateTransition (std::string str) {
+	Transition newTransition;
+	std::string tmp = "";
+	int counter = 0;
+	int elementCounter = 0;
+	std::vector<std::string> stackSymbols;
+	while (counter <= str.length()) {
+		if ((str[counter] != ' ' && str[counter] != '\n' && str[counter] != '\0')) {
+			tmp += str[counter];
+		}
+		else {
+			switch (elementCounter) {
+				case 0:
+					if (isValidData(tmp, 0)) {
+						newTransition.set_CurrentState(tmp);
+					}
+					else {
+						std::cout << std::endl << "Error, not valid current state for transition";
+						exit(1);
+					}
+					break;
+
+				case 1:
+					if (isValidData(tmp, 1)) {
+						newTransition.set_ChainSymbol(tmp);
+					}
+					else {
+						std::cout << std::endl << "Error, not valid alphabet element for transition";
+						exit(1);
+					}
+					break;
+
+				case 2:
+					if (isValidData(tmp, 2)) {
+						newTransition.set_TopStackSymbol(tmp);
+					}
+					else {
+						std::cout << std::endl << "Error, not valid stack symbol for transition";
+						exit(1);
+					}
+					break;
+
+				case 3:
+					if (isValidData(tmp, 0)) {
+						newTransition.set_NextState(tmp);
+					}
+					else {
+						std::cout << std::endl << "Error, not valid nextState for transition";
+						exit(1);
+					}
+					break;
+
+				case 4:
+					if (isValidData(tmp, 2)) {
+						stackSymbols.push_back(tmp);
+					}
+					else {
+						std::cout << std::endl << "Error, not valid insertStackSymbol for transition";
+						exit(1);
+					}
+					break;
+
+				default:
+					std::cout <<std::endl << "Error while generate transitions";
+					exit(1);
+					break;
+			}
+			tmp = "";
+			if (elementCounter < 4) {
+				elementCounter++;
+			}
+		}
+		counter++;
+	}
+	newTransition.set_InsertStackSymbol(stackSymbols);
+	int pos = findState(newTransition.get_CurrentState());
+	states_[pos].addTransition(newTransition);
+	newTransition.printTransition(std::cout);
+}
+
 void APv::readData (std::string inputFile) {
 	std::ifstream input(inputFile, std::ios::in);
 	if (input.fail()) {
@@ -342,26 +425,35 @@ void APv::readData (std::string inputFile) {
 			getline(input, sentinel);
 		} while (sentinel[3] == '#' || sentinel[0] == '#');
 		// Generate the states from the first line
-		generateStates(sentinel);
+		dataSaver(sentinel, 0);
 		// Generate the automaton alphabet form the second line.
 		getline(input, sentinel);
-		generateAlphabet(sentinel);
+		dataSaver(sentinel, 1);
 
 		// Generate the stack alphabet form the second line.
 		getline(input, sentinel);
-		generateStackAlphabet(sentinel);
+		dataSaver(sentinel, 2);
 
-		// Search if start state is a valid one. and 
+		// Search if start state is a valid one. and sets it
 		getline(input, sentinel);
 		sentinel = eraseSpaces(sentinel);
-		if (isValidState(sentinel)) {
+		if (isValidData(sentinel, 0)) {
 			initialState_.set_StateID(sentinel);
 		}
+
+		// Search if start stack element is a valid one. and sets it
+		getline(input, sentinel);
+		sentinel = eraseSpaces(sentinel);
+		if (isValidData(sentinel, 2)) {
+			stack_.push(sentinel);
+		}
 		
-		/*while (!input.eof()) {
+		// Transitions generations
+		while (!input.eof()) {
 			getline(input, sentinel);
-			std::cout << std::endl << sentinel;
-		}*/
+			generateTransition(sentinel);
+		}
 	}
+	std::cout << std::endl << initialState_.get_StateID();
 	std::cout << std::endl << "ESTADOS: " << states_.size() << " " << states_[0].get_TransitionsNumber();
 }

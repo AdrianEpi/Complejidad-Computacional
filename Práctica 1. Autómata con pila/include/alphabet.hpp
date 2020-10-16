@@ -49,6 +49,7 @@ class Alphabet {
         // Functions
         void addElement (std::string newElement);
         int getSize (void) const;
+        bool isInAlphabet (std::string element);
 
         // Write
         std::ostream& printAlphabet (std::ostream& os) const;

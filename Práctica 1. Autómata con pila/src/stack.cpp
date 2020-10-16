@@ -17,7 +17,7 @@
 * @Author: Adrian Epifanio
 * @Date:   2020-10-12 15:52:04
 * @Last Modified by:   Adrian Epifanio
-* @Last Modified time: 2020-10-12 16:40:11
+* @Last Modified time: 2020-10-16 08:04:29
 */
 /*------------------  FUNCTIONS  -----------------*/
 
@@ -43,7 +43,7 @@ Stack::~Stack (void) {
  *
  * @return     The stack.
  */
-std::stack<char> Stack::get_Stack (void) const {
+std::stack<std::string> Stack::get_Stack (void) const {
 	return stack_;
 }
 
@@ -70,7 +70,7 @@ Alphabet Stack::get_StackAlphabet (void) const {
  *
  * @param[in]  newStack  The new stack
  */
-void Stack::set_Stack (std::stack<char> newStack) {
+void Stack::set_Stack (std::stack<std::string> newStack) {
 	stack_ = newStack;
 }
 
@@ -109,7 +109,7 @@ bool Stack::isEmpty (void) {
  *
  * @return     The top element of the stack
  */
-char Stack::top (void) {
+std::string Stack::top (void) {
 	assert(!isEmpty());
 	return stack_.top();
 }
@@ -128,7 +128,7 @@ void Stack::pop (void) {
  *
  * @param[in]  element  The element
  */
-void Stack::push (char element) {
+void Stack::push (std::string element) {
 	stack_.push(element);
 	size_++;
 }

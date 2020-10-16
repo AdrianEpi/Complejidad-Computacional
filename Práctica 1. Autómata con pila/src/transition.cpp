@@ -17,7 +17,7 @@
 * @Author: Adrian Epifanio
 * @Date:   2020-10-12 20:18:21
 * @Last Modified by:   Adrian Epifanio
-* @Last Modified time: 2020-10-15 08:41:52
+* @Last Modified time: 2020-10-16 08:59:55
 */
 /*------------------  FUNCTIONS  -----------------*/
 
@@ -29,8 +29,8 @@
  * @brief      Constructs a new instance.
  */
 Transition::Transition (void) {
-	set_ChainSymbol(' ');
-	set_TopStackSymbol(' ');
+	set_ChainSymbol("");
+	set_TopStackSymbol("");
 	set_NextState(" ");
 }
 
@@ -58,7 +58,7 @@ Transition::~Transition (void) {
  *
  * @return     The chain symbol.
  */
-char Transition::get_ChainSymbol (void) const {
+std::string Transition::get_ChainSymbol (void) const {
 	return chainSymbol_;
 }
 
@@ -67,7 +67,7 @@ char Transition::get_ChainSymbol (void) const {
  *
  * @return     The top stack symbol.
  */
-char Transition::get_TopStackSymbol (void) const {
+std::string Transition::get_TopStackSymbol (void) const {
 	return topStackSymbol_;
 }
 
@@ -76,7 +76,7 @@ char Transition::get_TopStackSymbol (void) const {
  *
  * @return     The insert stack symbol.
  */
-std::vector<char> Transition::get_InsertStackSymbol (void) const {
+std::vector<std::string> Transition::get_InsertStackSymbol (void) const {
 	return insertStackSymbol_;
 }
 
@@ -103,7 +103,7 @@ std::string Transition::get_NextState (void) const {
  *
  * @param[in]  newChainSymbol  The new chain symbol
  */
-void Transition::set_ChainSymbol (char newChainSymbol) {
+void Transition::set_ChainSymbol (std::string newChainSymbol) {
 	chainSymbol_ = newChainSymbol;
 }
 
@@ -112,7 +112,7 @@ void Transition::set_ChainSymbol (char newChainSymbol) {
  *
  * @param[in]  newTopStackSymbol  The new top stack symbol
  */
-void Transition::set_TopStackSymbol (char newTopStackSymbol) {
+void Transition::set_TopStackSymbol (std::string newTopStackSymbol) {
 	topStackSymbol_ = newTopStackSymbol;
 }
 
@@ -121,7 +121,7 @@ void Transition::set_TopStackSymbol (char newTopStackSymbol) {
  *
  * @param[in]  newInsertStackSymbol  The new insert stack symbol
  */
-void Transition::set_InsertStackSymbol (std::vector<char> newInsertStackSymbol) {
+void Transition::set_InsertStackSymbol (std::vector<std::string> newInsertStackSymbol) {
 	insertStackSymbol_ = newInsertStackSymbol;
 }
 
@@ -207,7 +207,7 @@ bool Transition::operator< (const Transition& auxTransition) const {
  * @return     The output stream
  */
 std::ostream& Transition::printTransition (std::ostream& os) const {
-	os << "Transition: (" << get_ChainSymbol() << ", " << get_NextState() << ", " << get_ChainSymbol() << ", ";
+	os << "Transition: (" << get_CurrentState() << ", " << get_ChainSymbol() << ", " << get_TopStackSymbol() << ", " << get_NextState() << ", ";
 	for (int i = 0; i < insertStackSymbol_.size(); i++) {
 		os << insertStackSymbol_[i];
 	}
