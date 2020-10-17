@@ -35,7 +35,7 @@ class State {
         // Attributes   
         std::string id_;                    // The identifier of the state 0, 1, 2, 3...
         unsigned transitionsNumber_;        // The ammount of transitions for the state
-        std::set<Transition> transitions_;  // The set of transitions of the state
+        std::vector<Transition> transitions_;  // The set of transitions of the state
 
     public:
         // Builders & destroyer
@@ -46,11 +46,11 @@ class State {
         // Getters & Setters
         std::string get_StateID (void) const;
         unsigned get_TransitionsNumber (void) const;
-        std::set<Transition> get_Transitions (void) const;
+        std::vector<Transition> get_Transitions (void) const;
 
         void set_StateID (std::string id);
         void set_TransitionsNumber (unsigned transitionsNumber);
-        void set_Transitions (std::set<Transition> transitions);
+        void set_Transitions (std::vector<Transition> transitions);
 
         // Operatoros Overload
         State& operator= (const State& newState);

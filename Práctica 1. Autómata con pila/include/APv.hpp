@@ -71,7 +71,7 @@ class APv {
         std::vector<Transition> getNextTransitions (State aux, std::string chainSymbol, std::string stackSymbol);
         int findState (std::string id);
         bool isValidData (std::string element, int mode); // Modes: 0 -> state, 1 -> automaton alphabet, 2 -> stack alphabet
-        void tryChain (std::string chain);
+        bool tryChain (std::string chain, int currentState);
         bool isChainAccepted (std::string chain, std::string stateID);
         std::string eraseSpaces (std::string str);
         void generateTransition (std::string str);

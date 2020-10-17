@@ -17,7 +17,7 @@
 * @Author: Adrian Epifanio
 * @Date:   2020-10-15 10:00:41
 * @Last Modified by:   Adrian Epifanio
-* @Last Modified time: 2020-10-16 09:02:45
+* @Last Modified time: 2020-10-17 20:37:02
 */
 /*------------------  FUNCTIONS  -----------------*/
 
@@ -301,8 +301,56 @@ int APv::findState (std::string id) {
 	return -1;
 }
 
-void APv::tryChain (std::string chain) {
+bool APv::tryChain (std::string chain, int currentState) {
+	if ((chain == "") && (stack_.get_StackSize() == 0)) {
+		return true;
+	}
+	else {
+		std::string symbol = "";
+		std::vector<Transition> possibleTransitions;
+		symbol = chain[0];
+		for (int i = 0; i < states_[currentState].get_TransitionsNumber(); i++) {
+			if ((states_[currentState].get_Transitions()[i].get_ChainSymbol() == symbol) || (states_[currentState].get_Transitions()[i].get_ChainSymbol() == ".")) {
+				if ((states_[currentState].get_Transitions()[i].get_TopStackSymbol() == stack_.top()) || (states_[currentState].get_Transitions()[i].get_TopStackSymbol() == ".")) {
+					possibleTransitions.push_back(states_[currentState].get_Transitions()[i]);
+				}
+			}
+		}
+		if (possibleTransitions.size() == 0) {
+			return false;
+		}
+		else {		
+			for (int i = 0; i < possibleTransitions.size(); i++) {
+				bool test = false;
+				int nextState = findState(possibleTransitions[i].get_NextState());
+				std::string newChain = "";
+				if (possibleTransitions[i].get_TopStackSymbol() != ".") {
+					stack_.pop();
+				}
 
+				if (possibleTransitions[i].get_InsertStackSymbol()[0] != ".") {
+					for (int j = 0; j < possibleTransitions[i].get_InsertStackSymbol().size(); j++) {
+						stack_.push(possibleTransitions[i].get_InsertStackSymbol()[j]);
+					}
+				}
+				if (possibleTransitions[i].get_ChainSymbol() != ".") {
+					for (int i = 1; i < chain.length(); i++) {
+						newChain += chain[i];
+					}
+				}
+				else {
+					newChain = chain;
+				}
+				test = tryChain(newChain, nextState);
+				if (test == true) {
+					path_.push_back(possibleTransitions[i]);
+					return true;
+				}
+			}
+			return false;
+		}
+
+	}
 }
 
 bool APv::isChainAccepted (std::string chain, std::string stateID) {
@@ -408,7 +456,7 @@ void APv::generateTransition (std::string str) {
 	newTransition.set_InsertStackSymbol(stackSymbols);
 	int pos = findState(newTransition.get_CurrentState());
 	states_[pos].addTransition(newTransition);
-	newTransition.printTransition(std::cout);
+	//newTransition.printTransition(std::cout);
 }
 
 void APv::readData (std::string inputFile) {
@@ -454,6 +502,4 @@ void APv::readData (std::string inputFile) {
 			generateTransition(sentinel);
 		}
 	}
-	std::cout << std::endl << initialState_.get_StateID();
-	std::cout << std::endl << "ESTADOS: " << states_.size() << " " << states_[0].get_TransitionsNumber();
 }

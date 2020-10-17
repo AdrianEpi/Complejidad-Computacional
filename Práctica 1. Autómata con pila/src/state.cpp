@@ -17,7 +17,7 @@
 * @Author: Adrian Epifanio
 * @Date:   2020-10-12 09:00:34
 * @Last Modified by:   Adrian Epifanio
-* @Last Modified time: 2020-10-12 21:12:52
+* @Last Modified time: 2020-10-17 19:38:46
 */
 /*------------------  FUNCTIONS  -----------------*/
 
@@ -74,7 +74,7 @@ unsigned State::get_TransitionsNumber (void) const {
  *
  * @return     The transitions.
  */
-std::set<Transition> State::get_Transitions (void) const {
+std::vector<Transition> State::get_Transitions (void) const {
 	return transitions_;
 }
 
@@ -101,7 +101,7 @@ void State::set_TransitionsNumber (unsigned transitionsNumber) {
  *
  * @param[in]  transitions  The transitions
  */
-void State::set_Transitions (std::set<Transition> transitions) {
+void State::set_Transitions (std::vector<Transition> transitions) {
 	transitions_ = transitions;
 }
 
@@ -173,9 +173,15 @@ bool State::operator< (const State& auxState) const {
  * @param[in]  newTransition  The new transition
  */
 void State::addTransition (const Transition& newTransition) {
-	if (transitions_.find(newTransition) == transitions_.end()) {
+	bool exist = false;
+	for (int i = 0; i < transitionsNumber_; i++) {
+		if (transitions_[i] == newTransition) {
+			exist = true;
+		}
+	}
+	if (!exist) {
 		transitionsNumber_++;
-		transitions_.insert(newTransition);
+		transitions_.push_back(newTransition);
 	}
 }
 
@@ -190,10 +196,9 @@ std::ostream& State::printState (std::ostream& os) const {
 	os << std::endl << "ID -> " << get_StateID() << std::endl;
 	os << "Transitions ammount -> " << get_TransitionsNumber() << std::endl;
 	os << "Transitions -> { ";
-	std::set<Transition>::iterator it = transitions_.begin();
-	for (; it != transitions_.end(); it++) {
+	for (int i = 0; i < transitionsNumber_; i++) {
 		os << " ";
-		it -> printTransition(os);
+		transitions_[i].printTransition(os);
 	}
 	os << " }" << std::endl;
 }

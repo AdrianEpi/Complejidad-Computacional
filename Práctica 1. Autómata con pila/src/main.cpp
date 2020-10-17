@@ -17,7 +17,7 @@
 * @Author: Adrian Epifanio
 * @Date:   2020-10-11 21:44:58
 * @Last Modified by:   Adrian Epifanio
-* @Last Modified time: 2020-10-15 21:46:10
+* @Last Modified time: 2020-10-17 20:39:33
 */
 /*------------------  FUNCTIONS  -----------------*/
 
@@ -35,5 +35,8 @@ int main (void) {
     t.printTransition(std::cout);
     n.printState(std::cout);*/
     APv asd;
-    asd.readData("../inputs/APv.txt");
+    asd.readData("../inputs/APv-2.txt");
+    bool tryS = asd.tryChain("01010101", 0);
+    std::cout << std::endl << "CADENA" << tryS << std::endl;
+
 }

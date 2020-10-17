@@ -17,7 +17,7 @@
 * @Author: Adrian Epifanio
 * @Date:   2020-10-12 15:52:04
 * @Last Modified by:   Adrian Epifanio
-* @Last Modified time: 2020-10-16 08:04:29
+* @Last Modified time: 2020-10-17 20:36:46
 */
 /*------------------  FUNCTIONS  -----------------*/
 
@@ -110,7 +110,9 @@ bool Stack::isEmpty (void) {
  * @return     The top element of the stack
  */
 std::string Stack::top (void) {
-	assert(!isEmpty());
+	if (isEmpty()) {
+		return "";
+	}
 	return stack_.top();
 }
 
@@ -118,9 +120,10 @@ std::string Stack::top (void) {
  * @brief      Deletes the top element form the stack.
  */
 void Stack::pop (void) {
-	assert(!isEmpty());
-	stack_.pop();
-	size_--;
+	if (!isEmpty()) {
+		stack_.pop();
+		size_--;
+	}
 }
 
 /**

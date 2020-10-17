@@ -17,7 +17,7 @@
 * @Author: Adrian Epifanio
 * @Date:   2020-10-12 20:18:21
 * @Last Modified by:   Adrian Epifanio
-* @Last Modified time: 2020-10-16 08:59:55
+* @Last Modified time: 2020-10-17 19:38:13
 */
 /*------------------  FUNCTIONS  -----------------*/
 
@@ -165,7 +165,7 @@ Transition Transition::operator= (const Transition& newTransition) {
  * @return     The result of the equality
  */
 bool Transition::operator== (const Transition& auxTransition) const {
-	if ((get_ChainSymbol() == auxTransition.get_ChainSymbol()) && (get_TopStackSymbol() == auxTransition.get_TopStackSymbol()) && (get_InsertStackSymbol() == auxTransition.get_InsertStackSymbol()) && (get_NextState() == auxTransition.get_NextState()) || (get_CurrentState() == auxTransition.get_CurrentState())) {
+	if ((get_ChainSymbol() == auxTransition.get_ChainSymbol()) && (get_TopStackSymbol() == auxTransition.get_TopStackSymbol()) && (get_InsertStackSymbol() == auxTransition.get_InsertStackSymbol()) && (get_NextState() == auxTransition.get_NextState()) && (get_CurrentState() == auxTransition.get_CurrentState())) {
 		return true;
 	}
 	return false;
