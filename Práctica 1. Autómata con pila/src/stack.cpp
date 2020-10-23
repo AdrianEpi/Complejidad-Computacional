@@ -17,7 +17,7 @@
 * @Author: Adrian Epifanio
 * @Date:   2020-10-12 15:52:04
 * @Last Modified by:   Adrian Epifanio
-* @Last Modified time: 2020-10-17 20:36:46
+* @Last Modified time: 2020-10-23 09:15:17
 */
 /*------------------  FUNCTIONS  -----------------*/
 
@@ -93,6 +93,20 @@ void Stack::set_StackAlphabet (Alphabet newAlphabet) {
 }
 
 /**
+ * @brief      Assignment operator.
+ *
+ * @param[in]  newStack  The new stack
+ *
+ * @return     The result of the assignment
+ */
+Stack& Stack::operator= (const Stack& newStack) {
+	set_StackSize(newStack.get_StackSize());
+	set_Stack(newStack.get_Stack());
+	set_StackAlphabet(newStack.get_StackAlphabet());
+	return *this;
+}
+
+/**
  * @brief      Determines if the stack is empty.
  *
  * @return     True if empty, False otherwise.
@@ -144,10 +158,9 @@ void Stack::push (std::string element) {
  * @return     The output stream
  */
 std::ostream& Stack::printStack (std::ostream& os) {
-	os << std::endl << "Stack: {";
-	while(!isEmpty()) {
-		os << " " << top();
-		pop();
+	Stack tmpStack = *this;
+	while(!tmpStack.isEmpty()) {
+		os << tmpStack.top();
+		tmpStack.pop();
 	}
-	os << "}" << std::endl;
 }

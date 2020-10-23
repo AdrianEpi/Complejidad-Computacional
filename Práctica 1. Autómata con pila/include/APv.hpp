@@ -24,7 +24,7 @@
 
 #include <iostream>
 #include <fstream>
-
+#include <iomanip>
 #include <set>
 #include <cstring>
 
@@ -41,6 +41,7 @@ class APv {
         std::string inputFile_;         // The input file name
         Stack stack_;                   // The stack used by the state
         std::vector<Transition> path_;  // The path that the automaton follows to know if the given chain is recognized or not by the automaton
+        bool showTrace_;                // 1 If the program is going to show the trace, 0 otherwise
 
     public:
         // Builders & Destroyer
@@ -56,6 +57,7 @@ class APv {
         std::string get_InputFile (void) const;
         Stack get_Stack (void) const;
         std::vector<Transition> get_Path (void) const;
+        bool get_ShowTrace (void) const;
 
         void set_Alphabet (Alphabet newAlphabet);
         void set_States (std::vector<State> newStates);
@@ -64,6 +66,7 @@ class APv {
         void set_InputFile (std::string newInputFile);
         void set_Stack (Stack newStack);
         void set_Path (std::vector<Transition> newPath);
+        void set_ShowTrace (bool showTrace);
 
         // Functions
         void dataSaver (std::string textLine, int mode); // Modes: 0 -> state, 1 -> automaton alphabet, 2 -> stack alphabet
@@ -71,10 +74,10 @@ class APv {
         std::vector<Transition> getNextTransitions (State aux, std::string chainSymbol, std::string stackSymbol);
         int findState (std::string id);
         bool isValidData (std::string element, int mode); // Modes: 0 -> state, 1 -> automaton alphabet, 2 -> stack alphabet
-        bool tryChain (std::string chain, int currentState);
+        bool tryChain (std::string chain, int currentState, Stack myStack);
         bool isChainAccepted (std::string chain, std::string stateID);
         std::string eraseSpaces (std::string str);
-        void generateTransition (std::string str);
+        void generateTransition (std::string str, int id);
 
         // Read & Write
         void readData (std::string inputFile);

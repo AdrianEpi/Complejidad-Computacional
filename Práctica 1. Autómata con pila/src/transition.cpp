@@ -17,7 +17,7 @@
 * @Author: Adrian Epifanio
 * @Date:   2020-10-12 20:18:21
 * @Last Modified by:   Adrian Epifanio
-* @Last Modified time: 2020-10-17 19:38:13
+* @Last Modified time: 2020-10-23 09:13:58
 */
 /*------------------  FUNCTIONS  -----------------*/
 
@@ -45,12 +45,22 @@ Transition::Transition (const Transition& auxTransition) {
 	set_InsertStackSymbol(auxTransition.get_InsertStackSymbol());
 	set_CurrentState(auxTransition.get_CurrentState());
 	set_NextState(auxTransition.get_NextState());
+	set_TransitionID(auxTransition.get_TransitionID());
 }
 
 /**
  * @brief      Destroys the object.
  */
 Transition::~Transition (void) {
+}
+
+/**
+ * @brief      Gets the transition id.
+ *
+ * @return     The transition id.
+ */
+int Transition::get_TransitionID (void) const {
+	return transitionID_;
 }
 
 /**
@@ -96,6 +106,15 @@ std::string Transition::get_CurrentState (void) const {
  */
 std::string Transition::get_NextState (void) const {
 	return nextState_;
+}
+
+/**
+ * @brief      Sets the transition id.
+ *
+ * @param[in]  newID  The new id
+ */
+void Transition::set_TransitionID (int newID) {
+	transitionID_ = newID;
 }
 
 /**
@@ -155,6 +174,7 @@ Transition Transition::operator= (const Transition& newTransition) {
 	set_TopStackSymbol(newTransition.get_TopStackSymbol());
 	set_InsertStackSymbol(newTransition.get_InsertStackSymbol());
 	set_NextState(newTransition.get_NextState());
+	set_TransitionID(newTransition.get_TransitionID());
 }
 
 /**
@@ -165,7 +185,7 @@ Transition Transition::operator= (const Transition& newTransition) {
  * @return     The result of the equality
  */
 bool Transition::operator== (const Transition& auxTransition) const {
-	if ((get_ChainSymbol() == auxTransition.get_ChainSymbol()) && (get_TopStackSymbol() == auxTransition.get_TopStackSymbol()) && (get_InsertStackSymbol() == auxTransition.get_InsertStackSymbol()) && (get_NextState() == auxTransition.get_NextState()) && (get_CurrentState() == auxTransition.get_CurrentState())) {
+	if ((get_ChainSymbol() == auxTransition.get_ChainSymbol()) && (get_TopStackSymbol() == auxTransition.get_TopStackSymbol()) && (get_InsertStackSymbol() == auxTransition.get_InsertStackSymbol()) && (get_NextState() == auxTransition.get_NextState()) && (get_CurrentState() == auxTransition.get_CurrentState()) && (get_TransitionID() == auxTransition.get_TransitionID())) {
 		return true;
 	}
 	return false;
@@ -179,7 +199,7 @@ bool Transition::operator== (const Transition& auxTransition) const {
  * @return     The result of the inequality
  */
 bool Transition::operator!= (const Transition& auxTransition) const {
-	if ((get_ChainSymbol() != auxTransition.get_ChainSymbol()) || (get_TopStackSymbol() != auxTransition.get_TopStackSymbol()) || (get_InsertStackSymbol() != auxTransition.get_InsertStackSymbol()) || (get_NextState() != auxTransition.get_NextState()) || (get_CurrentState() != auxTransition.get_CurrentState())) {
+	if ((get_ChainSymbol() != auxTransition.get_ChainSymbol()) || (get_TopStackSymbol() != auxTransition.get_TopStackSymbol()) || (get_InsertStackSymbol() != auxTransition.get_InsertStackSymbol()) || (get_NextState() != auxTransition.get_NextState()) || (get_CurrentState() != auxTransition.get_CurrentState()) || (get_TransitionID() != auxTransition.get_TransitionID())) {
 		return true;
 	}
 	return false;
@@ -193,7 +213,7 @@ bool Transition::operator!= (const Transition& auxTransition) const {
  * @return     The result of the less-than comparison
  */
 bool Transition::operator< (const Transition& auxTransition) const {
-	if (get_ChainSymbol() <= auxTransition.get_ChainSymbol()) {
+	if (get_TransitionID() <= auxTransition.get_TransitionID()) {
 		return true;
 	}
 	return false;
@@ -207,7 +227,7 @@ bool Transition::operator< (const Transition& auxTransition) const {
  * @return     The output stream
  */
 std::ostream& Transition::printTransition (std::ostream& os) const {
-	os << "Transition: (" << get_CurrentState() << ", " << get_ChainSymbol() << ", " << get_TopStackSymbol() << ", " << get_NextState() << ", ";
+	os << "(" << get_CurrentState() << ", " << get_ChainSymbol() << ", " << get_TopStackSymbol() << ", " << get_NextState() << ", ";
 	for (int i = 0; i < insertStackSymbol_.size(); i++) {
 		os << insertStackSymbol_[i];
 	}

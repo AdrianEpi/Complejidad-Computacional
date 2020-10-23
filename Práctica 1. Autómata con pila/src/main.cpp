@@ -17,7 +17,7 @@
 * @Author: Adrian Epifanio
 * @Date:   2020-10-11 21:44:58
 * @Last Modified by:   Adrian Epifanio
-* @Last Modified time: 2020-10-17 20:39:33
+* @Last Modified time: 2020-10-23 10:03:19
 */
 /*------------------  FUNCTIONS  -----------------*/
 
@@ -25,18 +25,79 @@
 
 /*------------------------------------------------*/
 
+void menu(APv& automaton);
+void multichain (APv& automaton);
+
+/**
+ * @brief      Main function of the program
+ *
+ */
 int main (void) {
-    /*State n;
-    Alphabet a;
-    Stack s;
-    Transition t;
-    a.printAlphabet(std::cout);
-    s.printStack(std::cout);
-    t.printTransition(std::cout);
-    n.printState(std::cout);*/
-    APv asd;
-    asd.readData("../inputs/APv-2.txt");
-    bool tryS = asd.tryChain("01010101", 0);
-    std::cout << std::endl << "CADENA" << tryS << std::endl;
+    std::string textFile = "";
+    std::cout << std::endl << "Bienvenido al simulador de un autómata de pila por vaciado APV";
+    std::cout << std::endl << "Por favor introduce el nombre del fichero de entrada con los datos del autómata: ";
+    std::cin >> textFile;
+
+    APv automaton;
+    automaton.readData(textFile);
+    menu(automaton);
+}
+
+/**
+ * @brief      Prints the menu by console and calls the function that is selected on each moment
+ *
+ * @param      automaton  The automaton
+ */
+void menu (APv& automaton) {
+    int sentinel = 1;
+    while (sentinel != 0) {
+        std::cout << std::endl <<std::endl << " ---- Menu del Autómata ----";
+        std::cout << std::endl << "\t1. Probar una cadena introducida manualmente.";
+        std::cout << std::endl << "\t2. Probar conjunto de cadenas introducidas desde fichero.";
+        std::cout << std::endl << "\t3. Activar modo traza.";
+        std::cout << std::endl << "\t4. Desactivar modo traza.";
+        std::cout << std::endl << "\t0. Salir del programa" << std::endl;
+        std::cin >> sentinel;
+        system("clear");
+        bool tryChain;
+        std::string chain;
+        switch (sentinel) {
+            case 0:
+                std::cout << std::endl << "Programa finalizado con éxito" << std::endl;
+                exit(0);
+                break;
+
+            case 1:
+                automaton.get_Alphabet().printAlphabet(std::cout);
+                std::cout << std::endl << "Introduzca la palabra: ";
+                std::cin >> chain;
+                if (automaton.get_ShowTrace()) {
+                    std::cout << "Estado\t\tEntrada\t\t\tPila\t\t  Acción" << std::endl;
+                }
+                tryChain = automaton.tryChain(chain, 0, automaton.get_Stack());
+                if (tryChain) {
+                    std::cout << std::endl << "La cadena introducida pertenece al lenguaje.";
+                }
+                else {
+                    std::cout << std::endl << "La cadena introducida no pertenece al lenguaje.";
+                }
+                break;
+
+            case 2:
+                break;
+
+            case 3:
+                automaton.set_ShowTrace(true);
+                break;
+
+            case 4:
+                automaton.set_ShowTrace(false);
+                break;
+
+        }
+    }
+}
+
+void multichain (APv& automaton) {
 
 }

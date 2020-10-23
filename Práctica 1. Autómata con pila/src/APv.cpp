@@ -17,7 +17,7 @@
 * @Author: Adrian Epifanio
 * @Date:   2020-10-15 10:00:41
 * @Last Modified by:   Adrian Epifanio
-* @Last Modified time: 2020-10-17 20:37:02
+* @Last Modified time: 2020-10-23 09:48:26
 */
 /*------------------  FUNCTIONS  -----------------*/
 
@@ -31,6 +31,7 @@
 APv::APv (void) {
 	set_StatesNum(0);
 	set_InputFile("");
+	set_ShowTrace(false);
 }
 
 /**
@@ -113,6 +114,15 @@ std::vector<Transition> APv::get_Path (void) const {
 }
 
 /**
+ * @brief      Gets the show trace.
+ *
+ * @return     The show trace.
+ */
+bool APv::get_ShowTrace (void) const {
+	return showTrace_;
+}
+
+/**
  * @brief      Sets the alphabet.
  *
  * @param[in]  newAlphabet  The new alphabet
@@ -173,6 +183,15 @@ void APv::set_Stack (Stack newStack) {
  */
 void APv::set_Path (std::vector<Transition> newPath) {
 	path_ = newPath;
+}
+
+/**
+ * @brief      Sets the show trace.
+ *
+ * @param[in]  showTrace  The show trace
+ */
+void APv::set_ShowTrace (bool showTrace) {
+	showTrace_ = showTrace;
 }
 
 /**
@@ -301,8 +320,17 @@ int APv::findState (std::string id) {
 	return -1;
 }
 
-bool APv::tryChain (std::string chain, int currentState) {
-	if ((chain == "") && (stack_.get_StackSize() == 0)) {
+/**
+ * @brief      Looks if a given chain is a valid chain or not for the automaton
+ *
+ * @param[in]  chain         The chain
+ * @param[in]  currentState  The current state
+ * @param[in]  myStack       My stack
+ *
+ * @return     True if chain if recognized by the automaton, false otherwise
+ */
+bool APv::tryChain (std::string chain, int currentState, Stack myStack) {
+	if ((chain == "") && (myStack.get_StackSize() == 0)) {
 		return true;
 	}
 	else {
@@ -311,7 +339,7 @@ bool APv::tryChain (std::string chain, int currentState) {
 		symbol = chain[0];
 		for (int i = 0; i < states_[currentState].get_TransitionsNumber(); i++) {
 			if ((states_[currentState].get_Transitions()[i].get_ChainSymbol() == symbol) || (states_[currentState].get_Transitions()[i].get_ChainSymbol() == ".")) {
-				if ((states_[currentState].get_Transitions()[i].get_TopStackSymbol() == stack_.top()) || (states_[currentState].get_Transitions()[i].get_TopStackSymbol() == ".")) {
+				if ((states_[currentState].get_Transitions()[i].get_TopStackSymbol() == myStack.top()) || (states_[currentState].get_Transitions()[i].get_TopStackSymbol() == ".")) {
 					possibleTransitions.push_back(states_[currentState].get_Transitions()[i]);
 				}
 			}
@@ -321,16 +349,25 @@ bool APv::tryChain (std::string chain, int currentState) {
 		}
 		else {		
 			for (int i = 0; i < possibleTransitions.size(); i++) {
+				if (get_ShowTrace()) {
+					std::cout << std::endl << std::endl << possibleTransitions[i].get_CurrentState();
+					std::cout << std::setw(22) << chain << std::setw(18);
+					myStack.printStack(std::cout);
+					std::cout << std::setw(20);
+					for (int j = 0; j < possibleTransitions.size(); j++) {
+						std::cout << possibleTransitions[j].get_TransitionID() << ", ";
+					}
+				}
 				bool test = false;
 				int nextState = findState(possibleTransitions[i].get_NextState());
 				std::string newChain = "";
+				Stack newStack = myStack;
 				if (possibleTransitions[i].get_TopStackSymbol() != ".") {
-					stack_.pop();
+					newStack.pop();
 				}
-
 				if (possibleTransitions[i].get_InsertStackSymbol()[0] != ".") {
-					for (int j = 0; j < possibleTransitions[i].get_InsertStackSymbol().size(); j++) {
-						stack_.push(possibleTransitions[i].get_InsertStackSymbol()[j]);
+					for (int j = possibleTransitions[i].get_InsertStackSymbol().size() -1; j >= 0; j--) {
+						newStack.push(possibleTransitions[i].get_InsertStackSymbol()[j]);
 					}
 				}
 				if (possibleTransitions[i].get_ChainSymbol() != ".") {
@@ -341,7 +378,7 @@ bool APv::tryChain (std::string chain, int currentState) {
 				else {
 					newChain = chain;
 				}
-				test = tryChain(newChain, nextState);
+				test = tryChain(newChain, nextState, newStack);
 				if (test == true) {
 					path_.push_back(possibleTransitions[i]);
 					return true;
@@ -351,10 +388,6 @@ bool APv::tryChain (std::string chain, int currentState) {
 		}
 
 	}
-}
-
-bool APv::isChainAccepted (std::string chain, std::string stateID) {
-
 }
 
 /**
@@ -378,8 +411,9 @@ std::string APv::eraseSpaces (std::string str) {
  * @brief      Generates and inserts a transition on the right state
  *
  * @param[in]  str   The string with the transition data
+ * @param[in]  id    The identifier
  */
-void APv::generateTransition (std::string str) {
+void APv::generateTransition (std::string str, int id) {
 	Transition newTransition;
 	std::string tmp = "";
 	int counter = 0;
@@ -453,12 +487,21 @@ void APv::generateTransition (std::string str) {
 		}
 		counter++;
 	}
+	newTransition.set_TransitionID(id);
 	newTransition.set_InsertStackSymbol(stackSymbols);
 	int pos = findState(newTransition.get_CurrentState());
 	states_[pos].addTransition(newTransition);
-	//newTransition.printTransition(std::cout);
+	//std::cout << std::endl << "SHOuld be: " << id;
+	//std::cout << std::endl << "AAAAAA" << newTransition.get_TransitionID();
+	//std::cout << std::endl << "ID_: " << states_[0].get_Transitions()[0].get_TransitionID();
+
 }
 
+/**
+ * @brief      Reads and stores the data from a file.
+ *
+ * @param[in]  inputFile  The input file
+ */
 void APv::readData (std::string inputFile) {
 	std::ifstream input(inputFile, std::ios::in);
 	if (input.fail()) {
@@ -497,9 +540,11 @@ void APv::readData (std::string inputFile) {
 		}
 		
 		// Transitions generations
+		int transitionCounter = 1;
 		while (!input.eof()) {
 			getline(input, sentinel);
-			generateTransition(sentinel);
+			generateTransition(sentinel, transitionCounter);
+			transitionCounter++;
 		}
 	}
 }

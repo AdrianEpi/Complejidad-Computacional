@@ -52,6 +52,9 @@ class Stack {
         void set_StackSize (unsigned size);
         void set_StackAlphabet (Alphabet newAlphabet);
 
+        // Operators overload
+        Stack& operator= (const Stack& newStack);
+
         // Functions
         bool isEmpty (void);
         std::string top (void);

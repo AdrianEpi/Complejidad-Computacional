@@ -35,11 +35,12 @@ class Transition {
 
     private:
         // Attributes
+        int transitionID_;                             // The identifier of the transition
         std::string chainSymbol_;                      // The needed chain symbol
         std::string topStackSymbol_;                   // The needed top stack symbol
         std::vector<std::string> insertStackSymbol_;   // The symbols that are going to be inserted in stack
-        std::string currentState_;              // The current state's name
-        std::string nextState_;                 // The next state's name
+        std::string currentState_;                     // The current state's name
+        std::string nextState_;                        // The next state's name
 
     public:
         // Builders & Destroyer
@@ -48,12 +49,14 @@ class Transition {
         ~Transition (void);
 
         // Getters & Setters
+        int get_TransitionID (void) const;
         std::string get_ChainSymbol (void) const;
         std::string get_TopStackSymbol (void) const;
         std::vector<std::string> get_InsertStackSymbol (void) const;
         std::string get_CurrentState (void) const;
         std::string get_NextState (void) const;
 
+        void set_TransitionID (int newID);
         void set_ChainSymbol (std::string newChainSymbol);
         void set_TopStackSymbol (std::string newTopStackSymbol);
         void set_InsertStackSymbol (std::vector<std::string> newInsertStackSymbol);
