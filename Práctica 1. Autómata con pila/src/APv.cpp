@@ -17,7 +17,7 @@
 * @Author: Adrian Epifanio
 * @Date:   2020-10-15 10:00:41
 * @Last Modified by:   Adrian Epifanio
-* @Last Modified time: 2020-10-23 09:48:26
+* @Last Modified time: 2020-10-23 11:23:16
 */
 /*------------------  FUNCTIONS  -----------------*/
 
@@ -206,7 +206,7 @@ void APv::dataSaver (std::string textLine, int mode) {
 	Alphabet tmp;
 	State newState;
 	while (counter <= textLine.length()) {
-		if (textLine[counter] != ' ' && textLine[counter] != '\n' && textLine[counter] != '\0') {
+		if ((textLine[counter] != ' ') && (textLine[counter] != '\n') && (textLine[counter] != '\0')) {
 			aux += textLine[counter];
 		}
 		else {
@@ -330,7 +330,7 @@ int APv::findState (std::string id) {
  * @return     True if chain if recognized by the automaton, false otherwise
  */
 bool APv::tryChain (std::string chain, int currentState, Stack myStack) {
-	if ((chain == "") && (myStack.get_StackSize() == 0)) {
+	if (((chain == "") || (chain == "\n"))&& (myStack.get_StackSize() == 0)) {
 		return true;
 	}
 	else {

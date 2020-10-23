@@ -17,7 +17,7 @@
 * @Author: Adrian Epifanio
 * @Date:   2020-10-11 21:44:58
 * @Last Modified by:   Adrian Epifanio
-* @Last Modified time: 2020-10-23 10:03:19
+* @Last Modified time: 2020-10-23 11:30:40
 */
 /*------------------  FUNCTIONS  -----------------*/
 
@@ -25,8 +25,8 @@
 
 /*------------------------------------------------*/
 
-void menu(APv& automaton);
-void multichain (APv& automaton);
+void menu(APv automaton);
+void multichain (APv automaton);
 
 /**
  * @brief      Main function of the program
@@ -48,7 +48,7 @@ int main (void) {
  *
  * @param      automaton  The automaton
  */
-void menu (APv& automaton) {
+void menu (APv automaton) {
     int sentinel = 1;
     while (sentinel != 0) {
         std::cout << std::endl <<std::endl << " ---- Menu del Autómata ----";
@@ -84,6 +84,7 @@ void menu (APv& automaton) {
                 break;
 
             case 2:
+                multichain(automaton);
                 break;
 
             case 3:
@@ -98,6 +99,36 @@ void menu (APv& automaton) {
     }
 }
 
-void multichain (APv& automaton) {
-
+void multichain (APv automaton) {
+    std::vector<std::string> chains;
+    std::string inputFile;
+    std::cout << std::endl << "Por favor introduce el nombre del fichero de entrada con las cadenas a probar: ";
+    std::cin >> inputFile;
+    std::ifstream input(inputFile, std::ios::in);
+    if (input.fail()) {
+        std::cout << std::endl << "Error 404, file not found" << std::endl;
+        exit(1);
+    }
+    else {
+        while (!input.eof()) {
+            std::string tmp = "";
+            getline(input, tmp);
+            if (tmp.size() >= 1) {
+              tmp.erase(tmp.size() - 1);
+              chains.push_back(tmp);
+            }
+        }
+        for (int i = 0; i < chains.size(); i++) {
+            if (automaton.get_ShowTrace()) {
+                std::cout << "Estado\t\tEntrada\t\t\tPila\t\t  Acción" << std::endl;
+            }
+            bool tryChain = automaton.tryChain(chains[i], 0, automaton.get_Stack());
+            if (tryChain) {
+                std::cout << std::endl << "La cadena introducida pertenece al lenguaje.";
+            }
+            else {
+                std::cout << std::endl << "La cadena introducida no pertenece al lenguaje.";
+            }
+        }
+    }
 }
