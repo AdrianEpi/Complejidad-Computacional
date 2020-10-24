@@ -18,6 +18,7 @@
 #pragma once 
 #include "state.hpp"
 #include "alphabet.hpp"
+#include "tape.hpp"
 
 /*------------------------------------------------*/
 /*------------------  LIBRARIES  -----------------*/
