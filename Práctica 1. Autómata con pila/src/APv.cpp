@@ -17,7 +17,7 @@
 * @Author: Adrian Epifanio
 * @Date:   2020-10-15 10:00:41
 * @Last Modified by:   Adrian Epifanio
-* @Last Modified time: 2020-10-23 11:23:16
+* @Last Modified time: 2020-10-24 12:13:18
 */
 /*------------------  FUNCTIONS  -----------------*/
 
@@ -266,7 +266,6 @@ std::vector<Transition> APv::getNextTransitions (State aux, std::string chainSym
 	return possibleTransitions;
 }
 
-
 /**
  * @brief      Determines if the given data is a valid data.
  *
@@ -491,10 +490,6 @@ void APv::generateTransition (std::string str, int id) {
 	newTransition.set_InsertStackSymbol(stackSymbols);
 	int pos = findState(newTransition.get_CurrentState());
 	states_[pos].addTransition(newTransition);
-	//std::cout << std::endl << "SHOuld be: " << id;
-	//std::cout << std::endl << "AAAAAA" << newTransition.get_TransitionID();
-	//std::cout << std::endl << "ID_: " << states_[0].get_Transitions()[0].get_TransitionID();
-
 }
 
 /**
@@ -511,7 +506,6 @@ void APv::readData (std::string inputFile) {
 	else {
 		set_InputFile(inputFile);
 		std::string sentinel;
-
 		do {	// For erasing all the comments
 			getline(input, sentinel);
 		} while (sentinel[3] == '#' || sentinel[0] == '#');
@@ -520,25 +514,21 @@ void APv::readData (std::string inputFile) {
 		// Generate the automaton alphabet form the second line.
 		getline(input, sentinel);
 		dataSaver(sentinel, 1);
-
 		// Generate the stack alphabet form the second line.
 		getline(input, sentinel);
 		dataSaver(sentinel, 2);
-
 		// Search if start state is a valid one. and sets it
 		getline(input, sentinel);
 		sentinel = eraseSpaces(sentinel);
 		if (isValidData(sentinel, 0)) {
 			initialState_.set_StateID(sentinel);
 		}
-
 		// Search if start stack element is a valid one. and sets it
 		getline(input, sentinel);
 		sentinel = eraseSpaces(sentinel);
 		if (isValidData(sentinel, 2)) {
 			stack_.push(sentinel);
 		}
-		
 		// Transitions generations
 		int transitionCounter = 1;
 		while (!input.eof()) {
