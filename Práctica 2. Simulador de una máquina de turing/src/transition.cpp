@@ -17,7 +17,7 @@
 * @Author: Adrian Epifanio
 * @Date:   2020-10-12 20:18:21
 * @Last Modified by:   Adrian Epifanio
-* @Last Modified time: 2020-10-24 12:50:04
+* @Last Modified time: 2020-10-25 12:26:38
 */
 /*------------------  FUNCTIONS  -----------------*/
 
@@ -31,7 +31,7 @@
 Transition::Transition (void) {
 	set_ChainSymbol("");
 	set_WriteSymbol("");
-	set_NextState(" ");
+	set_NextState("");
 }
 
 /**
@@ -176,6 +176,7 @@ Transition Transition::operator= (const Transition& newTransition) {
 	set_NextState(newTransition.get_NextState());
 	set_TransitionID(newTransition.get_TransitionID());
 	set_Movement(newTransition.get_Movement());
+	return *this;
 }
 
 /**

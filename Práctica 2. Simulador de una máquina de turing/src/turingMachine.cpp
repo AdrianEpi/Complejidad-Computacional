@@ -17,7 +17,7 @@
 * @Author: Adrian Epifanio
 * @Date:   2020-10-15 10:00:41
 * @Last Modified by:   Adrian Epifanio
-* @Last Modified time: 2020-10-25 10:30:20
+* @Last Modified time: 2020-10-25 13:59:16
 */
 /*------------------  FUNCTIONS  -----------------*/
 
@@ -255,6 +255,22 @@ int TuringMachine::findState (std::string id) {
 }
 
 /**
+ * @brief      Determines whether the specified identifier is an accepted state.
+ *
+ * @param[in]  id    The identifier
+ *
+ * @return     True if the specified identifier is accepted state, False otherwise.
+ */
+bool TuringMachine::isAcceptedState (int id) {
+	for (int i = 0; i < get_AcceptedStates().size(); i++) {
+		if (acceptedStates_[i] == id) {
+			return true;
+		}
+	}
+	return false;
+}
+
+/**
  * @brief      Determines if valid data.
  *
  * @param[in]  element  The element
@@ -399,9 +415,80 @@ void TuringMachine::generateTransition (std::string str, int id) {
 	newTransition.set_TransitionID(id);
 	int pos = findState(newTransition.get_CurrentState());
 	states_[pos].addTransition(newTransition);
-	newTransition.printTransition(std::cout);
 }
 
+/**
+ * @brief      Looks if a given chain is recognized by the turing machine or not
+ *
+ * @param[in]  chain  The chain
+ *
+ * @return     True if the chain is recognized, false otherwise
+ */
+bool TuringMachine::tryChain (std::string chain) {
+	std::vector<std::string> word;
+	for (int i = 0; i < chain.length(); i++) {
+		std::string tmp = "";
+		tmp += chain[i];
+		word.push_back(tmp);
+	}
+	tape_.introduceWord(word);
+	return executeTuringMachine(chain, findState(initialState_.get_StateID()));
+}
+
+/**
+ * @brief      Runs the algorithm that moves the heads of the tape to read and write following the states and transitions of the turing machine
+ *
+ * @param[in]  chain     The chain
+ * @param[in]  statePos  The state position
+ *
+ * @return     { description_of_the_return_value }
+ */
+bool TuringMachine::executeTuringMachine (std::string chain, int statePos) {
+	if (((chain == "") || (chain == "\n") || (chain == "\0")) && (isAcceptedState(statePos))) {
+		return true;
+	}
+	else {
+		std::string symbol = "";
+		symbol = chain[0];
+		Transition nextTransition;
+		for (int i = 0; i < states_[statePos].get_TransitionsNumber(); i++) {
+			if ((states_[statePos].get_Transitions()[i].get_ChainSymbol() == symbol) || (states_[statePos].get_Transitions()[i].get_ChainSymbol() == tape_.get_BlankSymbol())) {
+				if ((states_[statePos].get_Transitions()[i].get_ChainSymbol() == tape_.readSymbol())) {
+					nextTransition = states_[statePos].get_Transitions()[i];
+					break;
+				}
+			}
+		}
+		if (nextTransition.get_NextState() == "") {
+			return false;
+		}
+		else {
+			tape_.writeSymbol(nextTransition.get_WriteSymbol());
+			if (nextTransition.get_Movement() == 1) {
+				tape_.moveLeft();
+			}
+			else if (nextTransition.get_Movement() == 2) {
+				tape_.moveRight();
+			}
+			std::string newChain = "";
+			if (nextTransition.get_ChainSymbol() != ".") {
+				for (int i = 1; i < chain.length(); i++) {
+					newChain += chain[i];
+				}
+			}
+			else {
+				newChain = chain;
+			}
+			return executeTuringMachine(newChain, findState(nextTransition.get_NextState()));
+		}
+	}
+}
+
+/**
+ * @brief      Reads the data from file and stores it.
+ *
+ * @param[in]  inputFile  The input file
+ */
 void TuringMachine::readData (std::string inputFile) {
 	std::ifstream input(inputFile, std::ios::in);
 	if (input.fail()) {
@@ -431,7 +518,7 @@ void TuringMachine::readData (std::string inputFile) {
 		// Search if blank element is a valid one and sets it
 		getline(input, sentinel);
 		sentinel = eraseSpaces(sentinel);
-		if (get_Alphabet().isInAlphabet(sentinel)) {
+		if (tape_.get_TapeAlphabet().isInAlphabet(sentinel)) {
 			tape_.set_BlankSymbol(sentinel);
 		}
 		// Accepted states

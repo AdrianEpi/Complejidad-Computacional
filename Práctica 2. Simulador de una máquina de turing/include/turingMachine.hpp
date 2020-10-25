@@ -35,13 +35,13 @@ class TuringMachine {
 
     private:
         // Attributes
-        Alphabet alphabet_;                     // The alphabet recognized by the automaton
-        std::vector<State> states_;             // The vector of all the states of the automaton
-        std::vector<int> acceptedStates_;  // The vector with all the finishing accepted states for the automaton
-        unsigned statesNum_;                    // The ammount of states that the automaton has
-        State initialState_;                    // The idientifier of the initial state
-        std::string inputFile_;                 // The input file name
-        Tape tape_;                             // The turing machine tape
+        Alphabet alphabet_;                 // The alphabet recognized by the automaton
+        std::vector<State> states_;         // The vector of all the states of the automaton
+        std::vector<int> acceptedStates_;   // The vector with all the finishing accepted states for the automaton
+        unsigned statesNum_;                // The ammount of states that the automaton has
+        State initialState_;                // The idientifier of the initial state
+        std::string inputFile_;             // The input file name
+        Tape tape_;                         // The turing machine tape
 
     public:
         // Builders & Destroyer
@@ -70,9 +70,12 @@ class TuringMachine {
         void dataSaver (std::string textLine, int mode); // Modes: 0 -> state, 1 -> automaton alphabet, 2 -> tape alphabet
         void addState (State newState);
         int findState (std::string id);
+        bool isAcceptedState (int id);
         bool isValidData (std::string element, int mode); // Modes: 0 -> state, 1 -> automaton alphabet, 2 -> tape alphabet
         std::string eraseSpaces (std::string str);
         void generateTransition (std::string str, int id);
+        bool tryChain (std::string chain);
+        bool executeTuringMachine (std::string chain, int statePos);
 
         // Read & Write
         void readData (std::string inputFile);

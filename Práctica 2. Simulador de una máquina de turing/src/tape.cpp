@@ -17,7 +17,7 @@
 * @Author: Adrian Epifanio
 * @Date:   2020-10-24 12:45:19
 * @Last Modified by:   Adrian Epifanio
-* @Last Modified time: 2020-10-25 10:32:13
+* @Last Modified time: 2020-10-25 12:52:31
 */
 /*------------------  FUNCTIONS  -----------------*/
 
@@ -160,6 +160,7 @@ void Tape::introduceWord (std::vector<std::string> word) {
 	tape_.resize(get_TapeSize());
 	set_ReadHead(get_TapeSize() / 2);
 	set_WriteHead(get_TapeSize() / 2);
+	std::cout << "INTRODUCEEE-" << get_BlankSymbol() << "-";
 	for (int i = 0; i < tape_.size(); i++) {
 		tape_[i] = get_BlankSymbol();
 	}
@@ -187,7 +188,7 @@ void Tape::introduceWord (std::vector<std::string> word) {
 /**
  * @brief      Moves the read and write heads one position to the left
  */
-void Tape::moveleft (void) {
+void Tape::moveLeft (void) {
 	if (writeHead_ == 0 || readHead_ == 0) {
 		std::cout << std::endl << "Error, position -1 unavalaible." << std::endl;
 		exit(1);

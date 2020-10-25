@@ -61,7 +61,7 @@ class Tape {
 
         // Functions
         void introduceWord (std::vector<std::string> word);
-        void moveleft (void);
+        void moveLeft (void);
         void moveRight (void);
         void writeSymbol (std::string symbol);
         std::string readSymbol (void) const;
