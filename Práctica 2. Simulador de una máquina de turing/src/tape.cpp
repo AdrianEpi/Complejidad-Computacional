@@ -17,7 +17,7 @@
 * @Author: Adrian Epifanio
 * @Date:   2020-10-24 12:45:19
 * @Last Modified by:   Adrian Epifanio
-* @Last Modified time: 2020-10-24 14:19:01
+* @Last Modified time: 2020-10-25 10:32:13
 */
 /*------------------  FUNCTIONS  -----------------*/
 
@@ -34,7 +34,7 @@ Tape::Tape (void) {
 	set_ReadHead(MAX_SIZE / 2);
 	set_WriteHead(MAX_SIZE / 2);
 	set_TapeSize(MAX_SIZE);
-	set_BlankSymbol(".");
+	set_BlankSymbol("");
 }
 
 /**
